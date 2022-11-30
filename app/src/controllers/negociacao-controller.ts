@@ -4,13 +4,14 @@ import { Negociacoes } from "../models/negociacoes.js";
 import { MensagemView } from "../views/mensagem-view.js";
 import { NegociacoesView } from "../views/negociacoes-view.js";
 import { logarTempoDeExecucao } from "../decorators/logar-tempo-de-execucao.js";
+import { inspect } from '../decorators/inspect.js';
 
 export class NegociacaoController {
     private inputData: HTMLInputElement;
     private inputQuantidade: HTMLInputElement;
     private inputValor: HTMLInputElement;
     private negociacoes = new Negociacoes();
-    private negociacoesView = new NegociacoesView("#negociacoesView", true);
+    private negociacoesView = new NegociacoesView("#negociacoesView");
     private mensagemView = new MensagemView("#mensagemView");
 
     constructor() {
@@ -20,7 +21,8 @@ export class NegociacaoController {
         this.negociacoesView.update(this.negociacoes);
     }
 
-    @logarTempoDeExecucao()
+    @logarTempoDeExecucao(true)
+    @inspect
     public adiciona(): void {
         const negociacao = Negociacao.criaDe(
             this.inputData.value,

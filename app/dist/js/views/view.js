@@ -1,6 +1,5 @@
 export class View {
-    constructor(selector, escapar) {
-        this.escapar = false;
+    constructor(selector) {
         const elemento = document.querySelector(selector);
         if (elemento) {
             this.elemento = elemento;
@@ -8,15 +7,9 @@ export class View {
         else {
             throw new Error(`Seletor ${selector} não existe no DOM, verifique`);
         }
-        if (escapar) {
-            this.escapar = escapar;
-        }
     }
     update(model) {
         let template = this.template(model);
-        if (this.escapar) {
-            template = template.replace(/<script>[\s\S]*?<script>/g, "");
-        }
         this.elemento.innerHTML = template;
     }
 }
