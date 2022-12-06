@@ -11,6 +11,7 @@ import { MensagemView } from "../views/mensagem-view.js";
 import { NegociacoesView } from "../views/negociacoes-view.js";
 import { domInjector } from "../decorators/dom-injector.js";
 import { NegociacoesService } from "../services/negociacoes-service.js";
+import { imprimir } from "../utils/imprimir.js";
 export class NegociacaoController {
     constructor() {
         this.negociacoes = new Negociacoes();
@@ -26,11 +27,19 @@ export class NegociacaoController {
             return;
         }
         this.negociacoes.adiciona(negociacao);
+        imprimir(negociacao, this.negociacoes);
         this.atualizaView();
         this.limparFormulario();
     }
     importaDados() {
-        this.negociacoesServico.obterNegociacoesDoDia().then((negociacoesDeHoje) => {
+        this.negociacoesServico
+            .obterNegociacoesDoDia()
+            .then((negociacoesDeHoje) => {
+            return negociacoesDeHoje.filter((negociacaoDeHoje) => {
+                return !this.negociacoes.lista().some((negociacao) => negociacao.ehIgual(negociacaoDeHoje));
+            });
+        })
+            .then((negociacoesDeHoje) => {
             for (const negociacao of negociacoesDeHoje) {
                 this.negociacoes.adiciona(negociacao);
             }
